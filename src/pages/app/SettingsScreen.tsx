@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { User, Bell, Moon, Globe, Shield, HelpCircle, LogOut, ChevronRight, Sparkles, Crown } from "lucide-react";
+import { User, Bell, Moon, Globe, Shield, HelpCircle, LogOut, ChevronRight, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MobileLayout from "@/components/app/MobileLayout";
-import BottomNav from "@/components/app/BottomNav";
+import MobileHeader from "@/components/app/MobileHeader";
 
 const sections = [
   {
@@ -34,33 +34,31 @@ const SettingsScreen = () => {
   return (
     <MobileLayout>
       <div className="flex flex-col h-screen">
-        <div className="px-5 pt-6 pb-4">
-          <h1 className="text-xl font-bold text-foreground">Configurações</h1>
-        </div>
+        <MobileHeader title="Configurações" onBack={() => navigate("/app")} />
 
-        <div className="flex-1 overflow-y-auto px-5 pb-24">
+        <div className="flex-1 overflow-y-auto px-4 pb-24">
           {/* Premium Banner */}
           <motion.div
             whileTap={{ scale: 0.98 }}
-            className="gradient-primary rounded-2xl p-5 mb-6 relative overflow-hidden"
+            className="gradient-ai rounded-2xl p-5 my-4 relative overflow-hidden"
           >
-            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10" />
+            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-primary-foreground/10" />
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                <Crown size={24} className="text-white" />
+              <div className="w-12 h-12 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
+                <Crown size={24} className="text-primary-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-bold">GenioIA Premium</h3>
-                <p className="text-white/70 text-xs">Desbloqueie todas as funcionalidades</p>
+                <h3 className="text-primary-foreground font-bold">StudyFlow Premium</h3>
+                <p className="text-primary-foreground/70 text-xs">Desbloqueie todas as funcionalidades</p>
               </div>
-              <ChevronRight size={20} className="text-white/60" />
+              <ChevronRight size={20} className="text-primary-foreground/60" />
             </div>
           </motion.div>
 
           {/* Profile Card */}
-          <div className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-border mb-6">
-            <div className="w-14 h-14 rounded-full gradient-primary flex items-center justify-center">
-              <span className="text-white text-xl font-bold">E</span>
+          <div className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-border mb-5">
+            <div className="w-14 h-14 rounded-full gradient-ai flex items-center justify-center">
+              <span className="text-primary-foreground text-xl font-bold">E</span>
             </div>
             <div className="flex-1">
               <p className="font-bold text-foreground">Estudante</p>
@@ -76,11 +74,11 @@ const SettingsScreen = () => {
                 {section.items.map((item, ii) => (
                   <button
                     key={ii}
-                    className={`w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/50 transition-colors ${
+                    className={`w-full flex items-center gap-3 px-4 py-3.5 text-left active:bg-muted/50 transition-colors ${
                       ii < section.items.length - 1 ? "border-b border-border" : ""
                     }`}
                   >
-                    <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                       <item.icon size={18} className="text-primary" />
                     </div>
                     <div className="flex-1">
@@ -89,7 +87,7 @@ const SettingsScreen = () => {
                     </div>
                     {item.toggle ? (
                       <div className="w-10 h-6 rounded-full bg-primary relative">
-                        <div className="absolute right-0.5 top-0.5 w-5 h-5 rounded-full bg-white shadow-sm" />
+                        <div className="absolute right-0.5 top-0.5 w-5 h-5 rounded-full bg-primary-foreground shadow-sm" />
                       </div>
                     ) : (
                       <ChevronRight size={16} className="text-muted-foreground" />
@@ -103,15 +101,13 @@ const SettingsScreen = () => {
           {/* Logout */}
           <button
             onClick={() => navigate("/")}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border border-destructive/20 text-destructive font-semibold mb-6"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border border-destructive/20 text-destructive font-semibold mb-6 active:scale-[0.98] transition-transform"
           >
             <LogOut size={18} /> Sair
           </button>
 
-          <p className="text-center text-xs text-muted-foreground mb-4">GenioIA v1.0.0</p>
+          <p className="text-center text-xs text-muted-foreground mb-4">StudyFlow v1.0.0</p>
         </div>
-
-        <BottomNav />
       </div>
     </MobileLayout>
   );
