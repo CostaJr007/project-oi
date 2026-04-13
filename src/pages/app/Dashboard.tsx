@@ -15,7 +15,7 @@ const tabItems = [
 ];
 
 const Dashboard = () => {
-  const { selectedFolder, sidebarOpen, setSidebarOpen, activeTab, setActiveTab, folders } = useStudy();
+  const { selectedFolder, selectFolder, sidebarOpen, setSidebarOpen, activeTab, setActiveTab, folders } = useStudy();
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
