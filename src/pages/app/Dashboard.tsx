@@ -1,137 +1,153 @@
 import { motion } from "framer-motion";
-import { Mic, Camera, MessageSquare, Brain, BookOpen, PenTool, Presentation, GraduationCap, Bell, Search, TrendingUp, Clock, Flame } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import MobileLayout from "@/components/app/MobileLayout";
-import BottomNav from "@/components/app/BottomNav";
+import { Menu, Flame, TrendingUp, Clock, BookOpen, Brain, Sparkles, Plus, FolderOpen, GraduationCap } from "lucide-react";
+import { useStudy } from "@/contexts/StudyContext";
+import StudySidebar from "@/components/app/StudySidebar";
+import FlashcardsTab from "@/components/app/FlashcardsTab";
+import QuizTab from "@/components/app/QuizTab";
+import NotesTab from "@/components/app/NotesTab";
+import ImportTab from "@/components/app/ImportTab";
 
-const features = [
-  { icon: Mic, label: "Gravar Aula", color: "from-secondary to-teal-400", bg: "bg-secondary-50", path: "/app/recorder" },
-  { icon: Camera, label: "Resolver", color: "from-accent to-orange-400", bg: "bg-accent-50", path: "/app/snapper" },
-  { icon: MessageSquare, label: "Chat IA", color: "from-primary to-purple-500", bg: "bg-primary-50", path: "/app/chat" },
-  { icon: Brain, label: "Quiz", color: "from-pink-500 to-rose-400", bg: "bg-primary-50", path: "/app/quiz" },
-  { icon: BookOpen, label: "Flashcards", color: "from-info to-cyan-400", bg: "bg-primary-50", path: "/app/study" },
-  { icon: PenTool, label: "Escrever", color: "from-violet-500 to-purple-400", bg: "bg-primary-50", path: "/app/chat" },
-  { icon: Presentation, label: "Slides", color: "from-amber-500 to-orange-400", bg: "bg-accent-50", path: "/app/chat" },
-  { icon: GraduationCap, label: "Tese", color: "from-emerald-500 to-green-400", bg: "bg-secondary-50", path: "/app/chat" },
-];
-
-const recentItems = [
-  { title: "Aula de Cálculo II", time: "Há 2 horas", icon: Mic, type: "Gravação" },
-  { title: "Quiz de Física", time: "Ontem", icon: Brain, type: "Quiz" },
-  { title: "Resumo: React Hooks", time: "Há 3 dias", icon: BookOpen, type: "Resumo" },
+const tabItems = [
+  { key: "flashcards", label: "Flashcards", icon: BookOpen },
+  { key: "notes", label: "Resumos", icon: Sparkles },
+  { key: "quiz", label: "Quiz", icon: Brain },
+  { key: "import", label: "Aulas", icon: GraduationCap },
 ];
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const { selectedFolder, sidebarOpen, setSidebarOpen, activeTab, setActiveTab, folders } = useStudy();
 
   return (
-    <MobileLayout>
-      <div className="flex flex-col h-screen">
-        {/* Header */}
-        <div className="px-5 pt-6 pb-4">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="text-sm text-muted-foreground">Olá, 👋</p>
-              <h1 className="text-xl font-bold text-foreground">Estudante</h1>
-            </div>
-            <div className="flex gap-2">
-              <button className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center relative">
-                <Bell size={20} className="text-foreground" />
-                <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-destructive" />
-              </button>
-            </div>
-          </div>
+    <div className="flex h-screen bg-background overflow-hidden">
+      <StudySidebar />
 
-          {/* Search */}
-          <div className="relative mb-5">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Buscar aulas, resumos, quizzes..."
-              className="w-full pl-11 pr-4 py-3 rounded-xl bg-muted border border-border text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top bar */}
+        <header className="flex items-center gap-3 px-4 lg:px-6 py-4 border-b border-border bg-card/50 backdrop-blur-sm">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden w-9 h-9 rounded-xl bg-muted flex items-center justify-center">
+            <Menu size={18} />
+          </button>
+          <div className="flex-1">
+            {selectedFolder ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xl">{selectedFolder.icon}</span>
+                <h1 className="text-lg font-bold text-foreground">{selectedFolder.name}</h1>
+              </div>
+            ) : (
+              <h1 className="text-lg font-bold text-foreground">StudyFlow</h1>
+            )}
           </div>
+        </header>
 
-          {/* Stats */}
-          <div className="flex gap-3 mb-5">
-            <div className="flex-1 bg-primary-50 rounded-xl p-3 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
-                <Flame size={18} className="text-white" />
+        {/* Content area */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
+          {selectedFolder ? (
+            <div className="max-w-3xl mx-auto px-4 lg:px-6 py-5">
+              {/* Tabs */}
+              <div className="flex gap-1 p-1 bg-muted rounded-xl mb-6 overflow-x-auto">
+                {tabItems.map((tab) => {
+                  const isActive = activeTab === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`relative flex-1 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeTabBg"
+                          className="absolute inset-0 bg-card rounded-lg shadow-sm"
+                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative flex items-center gap-1.5">
+                        <tab.icon size={14} />
+                        <span className="hidden sm:inline">{tab.label}</span>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-              <div>
-                <p className="text-lg font-bold text-foreground">7</p>
-                <p className="text-[11px] text-muted-foreground">Dias seguidos</p>
-              </div>
-            </div>
-            <div className="flex-1 bg-secondary-50 rounded-xl p-3 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg gradient-secondary flex items-center justify-center">
-                <TrendingUp size={18} className="text-white" />
-              </div>
-              <div>
-                <p className="text-lg font-bold text-foreground">85%</p>
-                <p className="text-[11px] text-muted-foreground">Desempenho</p>
-              </div>
-            </div>
-            <div className="flex-1 bg-accent-50 rounded-xl p-3 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg gradient-accent flex items-center justify-center">
-                <Clock size={18} className="text-white" />
-              </div>
-              <div>
-                <p className="text-lg font-bold text-foreground">12h</p>
-                <p className="text-[11px] text-muted-foreground">Esta semana</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-5 pb-24">
-          {/* Features Grid */}
-          <h2 className="text-base font-bold text-foreground mb-3">Ferramentas</h2>
-          <div className="grid grid-cols-4 gap-3 mb-6">
-            {features.map((f, i) => (
-              <motion.button
-                key={i}
-                whileTap={{ scale: 0.93 }}
-                onClick={() => navigate(f.path)}
-                className="flex flex-col items-center gap-1.5"
-              >
-                <div className={`w-14 h-14 rounded-2xl ${f.bg} flex items-center justify-center`}>
-                  <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center`}>
-                    <f.icon size={18} className="text-white" />
+              {/* Tab content */}
+              {activeTab === "flashcards" && <FlashcardsTab />}
+              {activeTab === "notes" && <NotesTab />}
+              {activeTab === "quiz" && <QuizTab />}
+              {activeTab === "import" && <ImportTab />}
+            </div>
+          ) : (
+            /* Welcome dashboard */
+            <div className="max-w-3xl mx-auto px-4 lg:px-6 py-8">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 rounded-2xl gradient-ai flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/20">
+                  <GraduationCap size={32} className="text-primary-foreground" />
+                </div>
+                <h2 className="text-2xl font-bold text-foreground mb-2">Olá, Estudante! 👋</h2>
+                <p className="text-muted-foreground">Selecione um assunto na barra lateral ou crie um novo</p>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                <div className="bg-card border border-border rounded-xl p-4 text-center">
+                  <div className="w-10 h-10 rounded-lg gradient-ai flex items-center justify-center mx-auto mb-2">
+                    <Flame size={18} className="text-primary-foreground" />
                   </div>
+                  <p className="text-2xl font-bold text-foreground">7</p>
+                  <p className="text-[11px] text-muted-foreground">Dias seguidos</p>
                 </div>
-                <span className="text-[11px] font-medium text-foreground">{f.label}</span>
-              </motion.button>
-            ))}
-          </div>
+                <div className="bg-card border border-border rounded-xl p-4 text-center">
+                  <div className="w-10 h-10 rounded-lg gradient-success flex items-center justify-center mx-auto mb-2">
+                    <TrendingUp size={18} className="text-secondary-foreground" />
+                  </div>
+                  <p className="text-2xl font-bold text-foreground">85%</p>
+                  <p className="text-[11px] text-muted-foreground">Desempenho</p>
+                </div>
+                <div className="bg-card border border-border rounded-xl p-4 text-center">
+                  <div className="w-10 h-10 rounded-lg gradient-warm flex items-center justify-center mx-auto mb-2">
+                    <Clock size={18} className="text-accent-foreground" />
+                  </div>
+                  <p className="text-2xl font-bold text-foreground">12h</p>
+                  <p className="text-[11px] text-muted-foreground">Esta semana</p>
+                </div>
+              </div>
 
-          {/* Recent */}
-          <h2 className="text-base font-bold text-foreground mb-3">Recentes</h2>
-          <div className="space-y-3">
-            {recentItems.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border"
-              >
-                <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
-                  <item.icon size={18} className="text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.type} · {item.time}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              {/* Quick folders */}
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Seus Assuntos</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {folders.map((folder, i) => (
+                  <motion.button
+                    key={folder.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    onClick={() => {
+                      const { selectFolder } = useStudy as any; // use context properly below
+                    }}
+                    className="bg-card border border-border rounded-xl p-4 flex items-center gap-3 text-left hover:border-primary/30 transition-colors group"
+                  >
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${folder.color} flex items-center justify-center text-xl`}>
+                      {folder.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-foreground truncate">{folder.name}</p>
+                      <p className="text-xs text-muted-foreground">{folder.flashcardsCount} cards · {folder.quizScore}% quiz</p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Mobile hint */}
+              <p className="text-center text-xs text-muted-foreground mt-8 lg:hidden">
+                Toque no ☰ para abrir seus assuntos
+              </p>
+            </div>
+          )}
         </div>
-
-        <BottomNav />
       </div>
-    </MobileLayout>
+    </div>
   );
 };
 
