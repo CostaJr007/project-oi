@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Menu, Flame, TrendingUp, Clock, BookOpen, Brain, Sparkles, Plus, FolderOpen, GraduationCap } from "lucide-react";
+import { Menu, Flame, TrendingUp, Clock, BookOpen, Brain, Sparkles, GraduationCap } from "lucide-react";
 import { useStudy } from "@/contexts/StudyContext";
 import StudySidebar from "@/components/app/StudySidebar";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
@@ -123,9 +123,7 @@ const Dashboard = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    onClick={() => {
-                      const { selectFolder } = useStudy as any; // use context properly below
-                    }}
+                    onClick={() => selectFolder(folder.id)}
                     className="bg-card border border-border rounded-xl p-4 flex items-center gap-3 text-left hover:border-primary/30 transition-colors group"
                   >
                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${folder.color} flex items-center justify-center text-xl`}>

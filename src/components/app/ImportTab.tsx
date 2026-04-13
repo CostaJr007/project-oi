@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Youtube, FileText, Sparkles, Loader2, Link, BookOpen, Brain, Save } from "lucide-react";
+import { FileText, Sparkles, Loader2, Link, BookOpen, Brain, Save } from "lucide-react";
 import { useStudy } from "@/contexts/StudyContext";
 
 const ImportTab = () => {
@@ -55,8 +55,8 @@ const ImportTab = () => {
       {/* YouTube Import */}
       <div className="bg-card border border-border rounded-2xl p-5">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-            <Youtube size={16} className="text-destructive" />
+          <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center text-sm">
+            ▶️
           </div>
           <h3 className="font-bold text-foreground">Importar do YouTube</h3>
         </div>
