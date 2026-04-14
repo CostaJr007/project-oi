@@ -216,7 +216,7 @@ const Dashboard = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
                       whileTap={{ scale: 0.96 }}
-                      onClick={() => setActiveView(action.key)}
+                      onClick={() => action.route ? navigate(action.route) : setActiveView(action.key)}
                       className="bg-card border border-border rounded-2xl p-4 text-left active:border-primary/30 transition-colors flex flex-col gap-3"
                     >
                       <div className={`w-11 h-11 rounded-xl ${action.bgColor} flex items-center justify-center`}>
