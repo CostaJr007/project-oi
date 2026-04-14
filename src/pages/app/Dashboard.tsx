@@ -69,9 +69,53 @@ const studyActions = [
 ];
 
 const Dashboard = () => {
-  const { selectedFolder, selectFolder, folders, addFolder } = useStudy();
+  const { selectedFolder, selectFolder, folders, addFolder, renameFolder, removeFolder } = useStudy();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeView, setActiveView] = useState<ActiveView>("hub");
+
+  // New folder / rename modal
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showNameModal) {
+      setTimeout(() => nameInputRef.current?.focus(), 100);
+    }
+  }, [showNameModal]);
+
+  const openNewFolder = () => {
+    setEditingFolderId(null);
+    setNameInput("");
+    setShowNameModal(true);
+  };
+
+  const openRenameFolder = (id: string, currentName: string) => {
+    setEditingFolderId(id);
+    setNameInput(currentName);
+    setShowNameModal(true);
+    setMenuOpenId(null);
+  };
+
+  const handleSaveName = () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    if (editingFolderId) {
+      renameFolder(editingFolderId, trimmed);
+    } else {
+      addFolder(trimmed);
+    }
+    setShowNameModal(false);
+    setNameInput("");
+    setEditingFolderId(null);
+  };
+
+  const handleDeleteFolder = (id: string) => {
+    removeFolder(id);
+    setMenuOpenId(null);
+  };
 
   const filteredFolders = folders.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
