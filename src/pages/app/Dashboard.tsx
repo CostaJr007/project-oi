@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, Mic, FileText, Camera, Play } from "lucide-react";
+import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, Mic, FileText, Camera, Video } from "lucide-react";
 import { useStudy } from "@/contexts/StudyContext";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
 import QuizTab from "@/components/app/QuizTab";
@@ -34,7 +34,7 @@ const studyActions = [
     key: "import" as ActiveView,
     label: "Resumo YouTube",
     desc: "Cole um link e gere resumo",
-    icon: Youtube,
+    icon: Video,
     gradient: "",
     color: "text-destructive",
     bgColor: "bg-destructive/10",
