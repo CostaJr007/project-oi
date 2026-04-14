@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, Mic, FileText, Camera, Video, MoreVertical, Pencil, Trash2, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useStudy } from "@/contexts/StudyContext";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
 import QuizTab from "@/components/app/QuizTab";
@@ -9,7 +10,7 @@ import ImportTab from "@/components/app/ImportTab";
 import MobileLayout from "@/components/app/MobileLayout";
 import MobileHeader from "@/components/app/MobileHeader";
 
-type ActiveView = "hub" | "flashcards" | "notes" | "quiz" | "import";
+type ActiveView = "hub" | "flashcards" | "notes" | "quiz" | "import" | "route";
 
 const studyActions = [
   {
@@ -17,7 +18,6 @@ const studyActions = [
     label: "Flashcards",
     desc: "Gere e revise cards com IA",
     icon: BookOpen,
-    gradient: "gradient-ai",
     color: "text-primary",
     bgColor: "bg-primary/10",
   },
@@ -26,7 +26,6 @@ const studyActions = [
     label: "Quiz",
     desc: "Teste seus conhecimentos",
     icon: Brain,
-    gradient: "gradient-success",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
   },
@@ -35,16 +34,15 @@ const studyActions = [
     label: "Resumo YouTube",
     desc: "Cole um link e gere resumo",
     icon: Video,
-    gradient: "",
     color: "text-destructive",
     bgColor: "bg-destructive/10",
   },
   {
-    key: "import" as ActiveView,
+    key: "route" as ActiveView,
+    route: "/app/recorder",
     label: "Transcrever Aula",
     desc: "Grave ou faça upload de áudio",
     icon: Mic,
-    gradient: "gradient-warm",
     color: "text-accent",
     bgColor: "bg-accent/10",
   },
@@ -53,16 +51,15 @@ const studyActions = [
     label: "Resumos & Notas",
     desc: "Veja suas anotações salvas",
     icon: FileText,
-    gradient: "",
     color: "text-primary",
     bgColor: "bg-primary/10",
   },
   {
-    key: "flashcards" as ActiveView,
+    key: "route" as ActiveView,
+    route: "/app/snapper",
     label: "Problem Snapper",
     desc: "Tire foto de uma questão",
     icon: Camera,
-    gradient: "",
     color: "text-accent",
     bgColor: "bg-accent/10",
   },
@@ -70,6 +67,7 @@ const studyActions = [
 
 const Dashboard = () => {
   const { selectedFolder, selectFolder, folders, addFolder, renameFolder, removeFolder } = useStudy();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeView, setActiveView] = useState<ActiveView>("hub");
 
@@ -141,6 +139,7 @@ const Dashboard = () => {
     quiz: "Quiz",
     notes: "Resumos & Notas",
     import: "Aulas & Importar",
+    route: "",
   };
 
   return (
@@ -218,7 +217,7 @@ const Dashboard = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
                       whileTap={{ scale: 0.96 }}
-                      onClick={() => setActiveView(action.key)}
+                      onClick={() => action.route ? navigate(action.route) : setActiveView(action.key)}
                       className="bg-card border border-border rounded-2xl p-4 text-left active:border-primary/30 transition-colors flex flex-col gap-3"
                     >
                       <div className={`w-11 h-11 rounded-xl ${action.bgColor} flex items-center justify-center`}>
