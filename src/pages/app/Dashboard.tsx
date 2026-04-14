@@ -291,7 +291,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Seus Assuntos</h3>
                 <button
-                  onClick={() => addFolder("Novo Assunto")}
+                  onClick={openNewFolder}
                   className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center active:scale-95 transition-transform"
                 >
                   <Plus size={16} className="text-primary" />
@@ -301,25 +301,57 @@ const Dashboard = () => {
               {filteredFolders.length > 0 ? (
                 <div className="space-y-2.5">
                   {filteredFolders.map((folder, i) => (
-                    <motion.button
+                    <motion.div
                       key={folder.id}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      onClick={() => handleSelectFolder(folder.id)}
-                      className="w-full bg-card border border-border rounded-xl p-4 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
+                      className="relative"
                     >
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${folder.color} flex items-center justify-center text-xl shrink-0`}>
-                        {folder.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-foreground truncate">{folder.name}</p>
-                        <p className="text-xs text-muted-foreground">{folder.flashcardsCount} cards · {folder.quizScore}% quiz</p>
-                      </div>
-                      <div className="w-8 h-8 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0">
-                        <span className="text-[10px] font-bold text-primary">{folder.quizScore}%</span>
-                      </div>
-                    </motion.button>
+                      <button
+                        onClick={() => handleSelectFolder(folder.id)}
+                        className="w-full bg-card border border-border rounded-xl p-4 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
+                      >
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${folder.color} flex items-center justify-center text-xl shrink-0`}>
+                          {folder.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-foreground truncate">{folder.name}</p>
+                          <p className="text-xs text-muted-foreground">{folder.flashcardsCount} cards · {folder.quizScore}% quiz</p>
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === folder.id ? null : folder.id); }}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted shrink-0"
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                      </button>
+
+                      {/* Context menu */}
+                      <AnimatePresence>
+                        {menuOpenId === folder.id && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: -4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: -4 }}
+                            className="absolute right-2 top-14 z-30 bg-card border border-border rounded-xl shadow-xl overflow-hidden min-w-[160px]"
+                          >
+                            <button
+                              onClick={() => openRenameFolder(folder.id, folder.name)}
+                              className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors"
+                            >
+                              <Pencil size={14} className="text-primary" /> Renomear
+                            </button>
+                            <button
+                              onClick={() => handleDeleteFolder(folder.id)}
+                              className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-destructive hover:bg-destructive/10 transition-colors border-t border-border"
+                            >
+                              <Trash2 size={14} /> Excluir
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
                   ))}
                 </div>
               ) : (
@@ -331,6 +363,54 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+
+        {/* Name Modal (Create / Rename) */}
+        <AnimatePresence>
+          {showNameModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-end justify-center bg-background/80 backdrop-blur-sm"
+              onClick={() => setShowNameModal(false)}
+            >
+              <motion.div
+                initial={{ y: 100 }}
+                animate={{ y: 0 }}
+                exit={{ y: 100 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-[430px] bg-card border-t border-border rounded-t-3xl p-6 space-y-4 safe-bottom"
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-foreground">
+                    {editingFolderId ? "Renomear Assunto" : "Novo Assunto"}
+                  </h3>
+                  <button onClick={() => setShowNameModal(false)} className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                    <X size={16} className="text-muted-foreground" />
+                  </button>
+                </div>
+
+                <input
+                  ref={nameInputRef}
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
+                  placeholder="Ex: Cálculo II, Física, História..."
+                  className="w-full py-3 px-4 rounded-xl bg-muted border border-border text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+
+                <button
+                  onClick={handleSaveName}
+                  disabled={!nameInput.trim()}
+                  className="w-full gradient-ai text-primary-foreground font-semibold py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-40 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform"
+                >
+                  <Plus size={16} />
+                  {editingFolderId ? "Salvar" : "Criar Assunto"}
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </MobileLayout>
   );
