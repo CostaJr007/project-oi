@@ -11,6 +11,10 @@ import RegisterScreen from "./pages/auth/RegisterScreen";
 import Dashboard from "./pages/app/Dashboard";
 import ChatScreen from "./pages/app/ChatScreen";
 import SettingsScreen from "./pages/app/SettingsScreen";
+import SnapperScreen from "./pages/app/SnapperScreen";
+import RecorderScreen from "./pages/app/RecorderScreen";
+import StudyScreen from "./pages/app/StudyScreen";
+import QuizScreen from "./pages/app/QuizScreen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +33,10 @@ const App = () => (
             <Route path="/app" element={<Dashboard />} />
             <Route path="/app/chat" element={<ChatScreen />} />
             <Route path="/app/settings" element={<SettingsScreen />} />
+            <Route path="/app/snapper" element={<SnapperScreen />} />
+            <Route path="/app/recorder" element={<RecorderScreen />} />
+            <Route path="/app/study" element={<StudyScreen />} />
+            <Route path="/app/quiz" element={<QuizScreen />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
