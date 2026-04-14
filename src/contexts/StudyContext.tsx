@@ -14,6 +14,7 @@ export interface Folder {
 export interface Flashcard {
   id: string;
   folderId: string;
+  subtopic: string;
   front: string;
   back: string;
   type: "front-back" | "multiple-choice" | "fill-blank";
