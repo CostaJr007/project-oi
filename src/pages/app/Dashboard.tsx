@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, GraduationCap, Mic, Youtube, FileText, Camera, ArrowLeft } from "lucide-react";
+import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, Mic, FileText, Camera, Play } from "lucide-react";
 import { useStudy } from "@/contexts/StudyContext";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
 import QuizTab from "@/components/app/QuizTab";
