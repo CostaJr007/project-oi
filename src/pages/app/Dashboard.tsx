@@ -10,7 +10,7 @@ import ImportTab from "@/components/app/ImportTab";
 import MobileLayout from "@/components/app/MobileLayout";
 import MobileHeader from "@/components/app/MobileHeader";
 
-type ActiveView = "hub" | "flashcards" | "notes" | "quiz" | "import";
+type ActiveView = "hub" | "flashcards" | "notes" | "quiz" | "import" | "route";
 
 const studyActions = [
   {
