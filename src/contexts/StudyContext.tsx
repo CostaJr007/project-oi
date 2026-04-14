@@ -14,6 +14,7 @@ export interface Folder {
 export interface Flashcard {
   id: string;
   folderId: string;
+  subtopic: string;
   front: string;
   back: string;
   type: "front-back" | "multiple-choice" | "fill-blank";
@@ -75,11 +76,15 @@ const defaultFolders: Folder[] = [
 ];
 
 const defaultFlashcards: Flashcard[] = [
-  { id: "f1", folderId: "1", front: "O que é uma derivada?", back: "A derivada mede a taxa de variação instantânea de uma função.", type: "front-back", difficulty: "medium", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
-  { id: "f2", folderId: "1", front: "Integral de 2x dx", back: "x² + C", type: "front-back", difficulty: "easy", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
-  { id: "f3", folderId: "1", front: "Teorema Fundamental do Cálculo", back: "Se F é uma antiderivada de f em [a,b], então ∫ₐᵇ f(x)dx = F(b) - F(a)", type: "front-back", difficulty: "hard", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
-  { id: "f4", folderId: "2", front: "O que é o princípio da incerteza?", back: "Não se pode medir simultaneamente posição e momento de uma partícula com precisão arbitrária.", type: "front-back", difficulty: "medium", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
-  { id: "f5", folderId: "3", front: "Em que ano o Brasil foi descoberto?", back: "1500, por Pedro Álvares Cabral", type: "front-back", difficulty: "easy", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f1", folderId: "1", subtopic: "Derivadas", front: "O que é uma derivada?", back: "A derivada mede a taxa de variação instantânea de uma função.", type: "front-back", difficulty: "medium", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f2", folderId: "1", subtopic: "Integrais", front: "Integral de 2x dx", back: "x² + C", type: "front-back", difficulty: "easy", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f3", folderId: "1", subtopic: "Integrais", front: "Teorema Fundamental do Cálculo", back: "Se F é uma antiderivada de f em [a,b], então ∫ₐᵇ f(x)dx = F(b) - F(a)", type: "front-back", difficulty: "hard", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f4", folderId: "2", subtopic: "Princípios Fundamentais", front: "O que é o princípio da incerteza?", back: "Não se pode medir simultaneamente posição e momento de uma partícula com precisão arbitrária.", type: "front-back", difficulty: "medium", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f5", folderId: "3", subtopic: "Descobrimento", front: "Em que ano o Brasil foi descoberto?", back: "1500, por Pedro Álvares Cabral", type: "front-back", difficulty: "easy", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f6", folderId: "1", subtopic: "Derivadas", front: "Regra da cadeia", back: "(f∘g)'(x) = f'(g(x)) · g'(x)", type: "front-back", difficulty: "hard", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f7", folderId: "1", subtopic: "Limites", front: "O que é um limite?", back: "O valor que uma função se aproxima quando x tende a um certo ponto.", type: "front-back", difficulty: "easy", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f8", folderId: "2", subtopic: "Modelo Atômico", front: "O que é o modelo de Bohr?", back: "Modelo que descreve elétrons orbitando o núcleo em níveis de energia quantizados.", type: "front-back", difficulty: "medium", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
+  { id: "f9", folderId: "2", subtopic: "Princípios Fundamentais", front: "Dualidade onda-partícula", back: "Toda matéria exibe propriedades de onda e partícula simultaneamente.", type: "front-back", difficulty: "hard", interval: 1, easeFactor: 2.5, dueDate: new Date(), reviewCount: 0 },
 ];
 
 const defaultNotes: Note[] = [
