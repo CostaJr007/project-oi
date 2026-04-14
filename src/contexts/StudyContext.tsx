@@ -54,6 +54,7 @@ interface StudyContextType {
   sidebarOpen: boolean;
   activeTab: string;
   addFolder: (name: string) => void;
+  renameFolder: (id: string, name: string) => void;
   removeFolder: (id: string) => void;
   selectFolder: (id: string | null) => void;
   addFlashcards: (folderId: string, cards: Omit<Flashcard, "id" | "folderId" | "interval" | "easeFactor" | "dueDate" | "reviewCount">[]) => void;
