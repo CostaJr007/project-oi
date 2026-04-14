@@ -54,6 +54,7 @@ interface StudyContextType {
   sidebarOpen: boolean;
   activeTab: string;
   addFolder: (name: string) => void;
+  renameFolder: (id: string, name: string) => void;
   removeFolder: (id: string) => void;
   selectFolder: (id: string | null) => void;
   addFlashcards: (folderId: string, cards: Omit<Flashcard, "id" | "folderId" | "interval" | "easeFactor" | "dueDate" | "reviewCount">[]) => void;
@@ -122,6 +123,10 @@ export function StudyProvider({ children }: { children: ReactNode }) {
     if (selectedFolderId === id) setSelectedFolderId(null);
   };
 
+  const renameFolder = (id: string, name: string) => {
+    setFolders((prev) => prev.map((f) => f.id === id ? { ...f, name } : f));
+  };
+
   const selectFolder = (id: string | null) => {
     setSelectedFolderId(id);
     if (id) setActiveTab("flashcards");
@@ -157,7 +162,7 @@ export function StudyProvider({ children }: { children: ReactNode }) {
     <StudyContext.Provider value={{
       folders, selectedFolderId, selectedFolder, flashcards, notes, quizResults,
       darkMode, sidebarOpen, activeTab,
-      addFolder, removeFolder, selectFolder, addFlashcards, addNote, addQuizResult,
+      addFolder, renameFolder, removeFolder, selectFolder, addFlashcards, addNote, addQuizResult,
       toggleDarkMode, setSidebarOpen, setActiveTab,
     }}>
       {children}
