@@ -162,7 +162,7 @@ export function StudyProvider({ children }: { children: ReactNode }) {
     <StudyContext.Provider value={{
       folders, selectedFolderId, selectedFolder, flashcards, notes, quizResults,
       darkMode, sidebarOpen, activeTab,
-      addFolder, removeFolder, selectFolder, addFlashcards, addNote, addQuizResult,
+      addFolder, renameFolder, removeFolder, selectFolder, addFlashcards, addNote, addQuizResult,
       toggleDarkMode, setSidebarOpen, setActiveTab,
     }}>
       {children}
