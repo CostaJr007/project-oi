@@ -139,6 +139,7 @@ const Dashboard = () => {
     quiz: "Quiz",
     notes: "Resumos & Notas",
     import: "Aulas & Importar",
+    route: "",
   };
 
   return (
