@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, TrendingUp, Clock, BookOpen, Brain, Sparkles, GraduationCap, Plus, Search, FolderOpen } from "lucide-react";
+import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, GraduationCap, Mic, Youtube, FileText, Camera, ArrowLeft } from "lucide-react";
 import { useStudy } from "@/contexts/StudyContext";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
 import QuizTab from "@/components/app/QuizTab";
@@ -7,22 +8,96 @@ import NotesTab from "@/components/app/NotesTab";
 import ImportTab from "@/components/app/ImportTab";
 import MobileLayout from "@/components/app/MobileLayout";
 import MobileHeader from "@/components/app/MobileHeader";
-import { useState } from "react";
 
-const tabItems = [
-  { key: "flashcards", label: "Flashcards", icon: BookOpen },
-  { key: "notes", label: "Resumos", icon: Sparkles },
-  { key: "quiz", label: "Quiz", icon: Brain },
-  { key: "import", label: "Aulas", icon: GraduationCap },
+type ActiveView = "hub" | "flashcards" | "notes" | "quiz" | "import";
+
+const studyActions = [
+  {
+    key: "flashcards" as ActiveView,
+    label: "Flashcards",
+    desc: "Gere e revise cards com IA",
+    icon: BookOpen,
+    gradient: "gradient-ai",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+  },
+  {
+    key: "quiz" as ActiveView,
+    label: "Quiz",
+    desc: "Teste seus conhecimentos",
+    icon: Brain,
+    gradient: "gradient-success",
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
+  },
+  {
+    key: "import" as ActiveView,
+    label: "Resumo YouTube",
+    desc: "Cole um link e gere resumo",
+    icon: Youtube,
+    gradient: "",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
+  },
+  {
+    key: "import" as ActiveView,
+    label: "Transcrever Aula",
+    desc: "Grave ou faça upload de áudio",
+    icon: Mic,
+    gradient: "gradient-warm",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
+  },
+  {
+    key: "notes" as ActiveView,
+    label: "Resumos & Notas",
+    desc: "Veja suas anotações salvas",
+    icon: FileText,
+    gradient: "",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+  },
+  {
+    key: "flashcards" as ActiveView,
+    label: "Problem Snapper",
+    desc: "Tire foto de uma questão",
+    icon: Camera,
+    gradient: "",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
+  },
 ];
 
 const Dashboard = () => {
-  const { selectedFolder, selectFolder, activeTab, setActiveTab, folders, addFolder } = useStudy();
+  const { selectedFolder, selectFolder, folders, addFolder } = useStudy();
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeView, setActiveView] = useState<ActiveView>("hub");
 
   const filteredFolders = folders.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleSelectFolder = (id: string) => {
+    selectFolder(id);
+    setActiveView("hub");
+  };
+
+  const handleBackToHub = () => {
+    setActiveView("hub");
+  };
+
+  const handleBackToHome = () => {
+    selectFolder(null);
+    setActiveView("hub");
+  };
+
+  const viewLabels: Record<ActiveView, string> = {
+    hub: "",
+    flashcards: "Flashcards",
+    quiz: "Quiz",
+    notes: "Resumos & Notas",
+    import: "Aulas & Importar",
+  };
 
   return (
     <MobileLayout>
@@ -30,10 +105,10 @@ const Dashboard = () => {
         {/* Header */}
         {selectedFolder ? (
           <MobileHeader
-            title={selectedFolder.name}
-            subtitle={`${selectedFolder.flashcardsCount} cards · ${selectedFolder.quizScore}% quiz`}
-            onBack={() => selectFolder(null)}
-            icon={<span className="text-base">{selectedFolder.icon}</span>}
+            title={activeView === "hub" ? selectedFolder.name : viewLabels[activeView]}
+            subtitle={activeView === "hub" ? `${selectedFolder.flashcardsCount} cards · ${selectedFolder.quizScore}% quiz` : selectedFolder.name}
+            onBack={activeView === "hub" ? handleBackToHome : handleBackToHub}
+            icon={activeView === "hub" ? <span className="text-base">{selectedFolder.icon}</span> : undefined}
           />
         ) : (
           <header className="px-4 pt-6 pb-3 space-y-4">
@@ -46,8 +121,6 @@ const Dashboard = () => {
                 <span className="text-primary-foreground text-sm font-bold">E</span>
               </div>
             </div>
-
-            {/* Search */}
             <div className="relative">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -63,42 +136,87 @@ const Dashboard = () => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto pb-20 scrollbar-thin">
           {selectedFolder ? (
-            <div className="px-4 py-4">
-              {/* Tabs */}
-              <div className="flex gap-1 p-1 bg-muted rounded-xl mb-5 overflow-x-auto">
-                {tabItems.map((tab) => {
-                  const isActive = activeTab === tab.key;
-                  return (
-                    <button
-                      key={tab.key}
-                      onClick={() => setActiveTab(tab.key)}
-                      className={`relative flex-1 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
-                        isActive ? "text-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeTabBg"
-                          className="absolute inset-0 bg-card rounded-lg shadow-sm"
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        />
-                      )}
-                      <span className="relative flex items-center gap-1.5">
-                        <tab.icon size={14} />
-                        {tab.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+            activeView === "hub" ? (
+              /* ===== FOLDER HUB — Action Buttons ===== */
+              <div className="px-4 py-4">
+                {/* Quick stats */}
+                <div className="flex gap-3 mb-6">
+                  <div className="flex-1 bg-card border border-border rounded-xl p-3 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg gradient-ai flex items-center justify-center shrink-0">
+                      <BookOpen size={18} className="text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-foreground">{selectedFolder.flashcardsCount}</p>
+                      <p className="text-[10px] text-muted-foreground">Flashcards</p>
+                    </div>
+                  </div>
+                  <div className="flex-1 bg-card border border-border rounded-xl p-3 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg gradient-success flex items-center justify-center shrink-0">
+                      <Brain size={18} className="text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-foreground">{selectedFolder.quizScore}%</p>
+                      <p className="text-[10px] text-muted-foreground">Quiz Score</p>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Tab content */}
-              {activeTab === "flashcards" && <FlashcardsTab />}
-              {activeTab === "notes" && <NotesTab />}
-              {activeTab === "quiz" && <QuizTab />}
-              {activeTab === "import" && <ImportTab />}
-            </div>
+                {/* Section: O que deseja fazer? */}
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                  O que deseja estudar?
+                </h3>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {studyActions.map((action, i) => (
+                    <motion.button
+                      key={`${action.key}-${i}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => setActiveView(action.key)}
+                      className="bg-card border border-border rounded-2xl p-4 text-left active:border-primary/30 transition-colors flex flex-col gap-3"
+                    >
+                      <div className={`w-11 h-11 rounded-xl ${action.bgColor} flex items-center justify-center`}>
+                        <action.icon size={20} className={action.color} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{action.label}</p>
+                        <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">{action.desc}</p>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* AI tip */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-6 bg-primary/5 border border-primary/10 rounded-2xl p-4 flex items-start gap-3"
+                >
+                  <div className="w-9 h-9 rounded-lg gradient-ai flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkles size={16} className="text-primary-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Dica da IA</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Comece gerando flashcards e depois faça um quiz para testar seus conhecimentos!
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            ) : (
+              /* ===== Active Study View ===== */
+              <div className="px-4 py-4">
+                {activeView === "flashcards" && <FlashcardsTab />}
+                {activeView === "notes" && <NotesTab />}
+                {activeView === "quiz" && <QuizTab />}
+                {activeView === "import" && <ImportTab />}
+              </div>
+            )
           ) : (
+            /* ===== HOME — Folders List ===== */
             <div className="px-4 py-2">
               {/* Stats */}
               <div className="grid grid-cols-3 gap-2.5 mb-6">
@@ -144,7 +262,7 @@ const Dashboard = () => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      onClick={() => selectFolder(folder.id)}
+                      onClick={() => handleSelectFolder(folder.id)}
                       className="w-full bg-card border border-border rounded-xl p-4 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
                     >
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${folder.color} flex items-center justify-center text-xl shrink-0`}>
