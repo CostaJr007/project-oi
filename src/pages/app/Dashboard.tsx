@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, TrendingUp, Clock, Plus, Search, FolderOpen, BookOpen, Brain, Sparkles, Mic, FileText, Camera, Video, MoreVertical, Pencil, Trash2, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useStudy } from "@/contexts/StudyContext";
 import FlashcardsTab from "@/components/app/FlashcardsTab";
 import QuizTab from "@/components/app/QuizTab";
