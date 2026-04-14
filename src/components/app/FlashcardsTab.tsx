@@ -278,43 +278,41 @@ const FlashcardsTab = () => {
                       >
                         <div className="pt-2 pl-4 space-y-2">
                           {cards.map((card, ci) => {
-                            const isCardFlipped = flippedCardId === card.id;
                             return (
                               <motion.div
                                 key={card.id}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: ci * 0.03 }}
-                                onClick={() => setFlippedCardId(isCardFlipped ? null : card.id)}
-                                className={`bg-card border rounded-xl p-3.5 cursor-pointer active:scale-[0.98] transition-all ${
-                                  isCardFlipped ? "border-primary/30 bg-primary/5" : "border-border"
-                                }`}
+                                onClick={() => {
+                                  const cardIndex = folderCards.findIndex((c) => c.id === card.id);
+                                  if (cardIndex !== -1) {
+                                    setReviewCards(folderCards);
+                                    setCurrent(cardIndex);
+                                    setFlipped(false);
+                                    setKnown(0);
+                                    setUnknown(0);
+                                    setReviewMode(true);
+                                  }
+                                }}
+                                className="bg-card border border-border rounded-xl p-3.5 cursor-pointer active:scale-[0.98] transition-all hover:border-primary/30"
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-foreground leading-snug">
-                                      {isCardFlipped ? card.back : card.front}
+                                      {card.front}
                                     </p>
-                                    {!isCardFlipped && (
-                                      <p className="text-[11px] text-muted-foreground mt-1 line-clamp-1">{card.back}</p>
-                                    )}
+                                    <p className="text-[11px] text-muted-foreground mt-1 line-clamp-1">{card.back}</p>
                                   </div>
-                                  <div className="flex flex-col items-end gap-1.5 shrink-0">
-                                    <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
-                                      card.difficulty === "easy" ? "bg-secondary/10 text-secondary" :
-                                      card.difficulty === "medium" ? "bg-primary/10 text-primary" :
-                                      "bg-destructive/10 text-destructive"
-                                    }`}>
-                                      {card.difficulty === "easy" ? "Fácil" : card.difficulty === "medium" ? "Médio" : "Difícil"}
-                                    </span>
-                                    {isCardFlipped && (
-                                      <span className="text-[9px] text-primary font-medium">Resposta ↑</span>
-                                    )}
-                                  </div>
+                                  <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${
+                                    card.difficulty === "easy" ? "bg-secondary/10 text-secondary" :
+                                    card.difficulty === "medium" ? "bg-primary/10 text-primary" :
+                                    "bg-destructive/10 text-destructive"
+                                  }`}>
+                                    {card.difficulty === "easy" ? "Fácil" : card.difficulty === "medium" ? "Médio" : "Difícil"}
+                                  </span>
                                 </div>
-                                {!isCardFlipped && (
-                                  <p className="text-[10px] text-primary/60 mt-2">Toque para ver a resposta</p>
-                                )}
+                                <p className="text-[10px] text-primary/60 mt-2">Toque para abrir card</p>
                               </motion.div>
                             );
                           })}
