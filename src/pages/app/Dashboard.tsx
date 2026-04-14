@@ -67,6 +67,7 @@ const studyActions = [
 
 const Dashboard = () => {
   const { selectedFolder, selectFolder, folders, addFolder, renameFolder, removeFolder } = useStudy();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeView, setActiveView] = useState<ActiveView>("hub");
 
