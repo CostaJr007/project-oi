@@ -1,11 +1,10 @@
-import { Home, MessageSquare, BookOpen, Settings } from "lucide-react";
+import { Home, MessageSquare, Settings } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const tabs = [
   { icon: Home, label: "Início", path: "/app" },
   { icon: MessageSquare, label: "Chat IA", path: "/app/chat" },
-  { icon: BookOpen, label: "Estudar", path: "/app/study" },
   { icon: Settings, label: "Config", path: "/app/settings" },
 ];
 
