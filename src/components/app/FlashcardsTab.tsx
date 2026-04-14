@@ -19,7 +19,7 @@ const FlashcardsTab = () => {
   const [known, setKnown] = useState(0);
   const [unknown, setUnknown] = useState(0);
   const [expandedSubtopics, setExpandedSubtopics] = useState<Set<string>>(new Set());
-  const [flippedCardId, setFlippedCardId] = useState<string | null>(null);
+  
 
   // Group cards by subtopic
   const grouped = useMemo(() => {
