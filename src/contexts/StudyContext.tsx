@@ -123,6 +123,10 @@ export function StudyProvider({ children }: { children: ReactNode }) {
     if (selectedFolderId === id) setSelectedFolderId(null);
   };
 
+  const renameFolder = (id: string, name: string) => {
+    setFolders((prev) => prev.map((f) => f.id === id ? { ...f, name } : f));
+  };
+
   const selectFolder = (id: string | null) => {
     setSelectedFolderId(id);
     if (id) setActiveTab("flashcards");
